@@ -6,13 +6,17 @@ var Enemy = function(col, row, speed) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+
+    this.size = 80;
+
+
     this.col= typeof col !== 'undefined' ?  col : 0;
     this.x = this.col * 101;
 
     this.row= typeof row !== 'undefined' ?  row : 0 ;
     this.y = this.row * 83 + 55;
 
-    this.speed= typeof speed !== 'undefined' ?  speed : 10;
+    this.speed= typeof speed !== 'undefined' ?  speed : 30;
 }
 
 // Update the enemy's position, required method for game
@@ -27,20 +31,31 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    if(this.y == player.y && Math.abs(this.x-player.x)<this.size ){
+      //collision
+      setTimeout(function(){ player.reset(); }, 100);
+    }
+
 }
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(){
-  this.sprite = 'images/char-boy.png'
+  this.sprite = 'images/char-boy.png';
+  this.reset();
+}
+
+Player.prototype.reset = function(){
   this.row = 4
-  this.col = 3
+  this.col = 2
+}
+
+
+Player.prototype.update = function(){
   this.y= this.row*83+55
   this.x= this.col*101
-
-}
-Player.prototype.update = function(dt){
 
 };
 Player.prototype.render = function(){
@@ -64,8 +79,6 @@ Player.prototype.handleInput = function(key){
     default:
   }
 
-  this.x = this.col*101
-  this.y = this.row*83+55
 };
 
 
